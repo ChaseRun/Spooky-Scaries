@@ -12,7 +12,7 @@ STOP_AUDIO_GENERATION = {"$set": {"processing_audio": False}}
 STOP_VIDEO_GENERATION = {"$set": {"processing_video": False}}
 
 
-class Mongo:
+class MongoDB:
     def __init__(self, collection):
         print("Creating MongoDB client")
         cwd = os.path.dirname(os.path.abspath(__file__))

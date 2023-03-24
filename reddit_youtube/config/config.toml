@@ -1,0 +1,33 @@
+# Reddit-Praw Credentials
+[REDDIT]
+SUBREDDIT = "nosleep"
+USERNAME = "pizzapenguin11"
+CLIENT_ID = "6SRSiZU1JTnaznmSsmPTWg"
+CLIENT_SECRET = "B9JNWiBo3mfwiAWqSkiSRi7QLZMMCw"
+PASSWORD = "bumblebee3"
+USER_AGENT = "testscript by u/fakebot3"
+
+# AWS-Boto3 Credentials
+[AWS_S3]
+ACCESS_KEY = "AKIAWJCHVF5ZSRNFRB7C"
+SECRET_KEY = "9+elyoarog0lVztSKeI7JlDKgSGSOBRd9scVMDjI"
+
+[MONGO_DB]
+URI = "mongodb+srv://import_reddit:voBwu56xVF8Ps8zk@cluster0.gltwta9.mongodb.net/?retryWrites=true&w=majority"
+
+
+[AWS_AURORA]
+ACCESS_KEY = ""
+SECRET_KEY = ""
+REGION = "us-east-1"
+
+# Youtube
+
+HTML_TEMPLATE_PATH = "config/screenshot_template.html"
+
+
+
+
+# GITHUB PAT
+# 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
+# https://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@github.com/ChaseRun/Spooky-Scaries.git

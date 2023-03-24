@@ -1,0 +1,22 @@
+name: spooky-test
+channels:
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - pip
+  - pip:
+      - progressbar
+      - torch
+      - torchaudio
+      - tqdm
+      - einops
+      - transformers
+      - rotary_embedding_torch
+      - librosa
+      - inflect
+      - unidecode
+      - pymongo
+      - toml
+      - boto3

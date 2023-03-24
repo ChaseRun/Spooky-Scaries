@@ -1,7 +1,7 @@
 import argparse
 
 
-def get_args():
+def import_story_args():
     parser = argparse.ArgumentParser(
         prog="import-stories",
         usage="%(prog)s [options]",
