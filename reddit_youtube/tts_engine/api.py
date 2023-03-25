@@ -259,7 +259,7 @@ class TextToSpeech:
         enable_redaction=True,
         device=None,
         voice="geralt",
-        preset="fast",
+        preset="ultra_fast",
     ):
         """
         Constructor
@@ -516,7 +516,7 @@ class TextToSpeech:
 
         # output debug
         os.makedirs("debug_states", exist_ok=True)
-        torch.save(dbg_state, f"debug_states/do_tts_debug_{selected_voice}.pth")
+        torch.save(dbg_state, f"debug_states/do_tts_debug_{self.voice}.pth")
 
     def tts(
         self,
