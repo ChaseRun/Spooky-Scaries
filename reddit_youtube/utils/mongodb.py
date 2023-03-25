@@ -96,8 +96,7 @@ class MongoDB:
                 return None, None
         try:
             story_list = self.collection.find(
-                {"audio_generated": False, "processing_audio": False}
-            ).sort(
+                {"audio_generated": False}).sort(
                 [
                     ("series_id", pymongo.ASCENDING),
                     ("series_part", pymongo.ASCENDING),
