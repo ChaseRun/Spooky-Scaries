@@ -1,6 +1,4 @@
 import os
-
-import toml
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.video.compositing.concatenate import concatenate_videoclips
 from moviepy.video.VideoClip import ImageClip
@@ -9,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 
 def create_screenshots(
-    story: dict[str, str], segments: list[str], path: str
+        story: dict[str, str], segments: list[str], path: str
 ) -> None:
     """Generates a png file that will be the background for a video segment
     Post data is used to create an HTML file based on a template. This HTML
@@ -21,9 +19,7 @@ def create_screenshots(
         segments: The text to put in the screenshots
         path: The directory to create the images
     """
-
-    config = toml.load("config/config.toml")["ASSETS"]
-    screenshot_template = config["SCREENSHOT_TEMPLATE"]
+    screenshot_template = "../assets/screenshot_template.html"
 
     # add empty string for title
     for idx, current_html in enumerate(segments):
@@ -75,7 +71,6 @@ def resize_image(image_file):
 
 def create_video(path: str, num_clips: int):
     """
-
     Args:
         num_clips ():
         directory ():
@@ -83,22 +78,21 @@ def create_video(path: str, num_clips: int):
     # combine audio and background
     final_video = []
 
+    # add channel intro
     intro_video = VideoFileClip(f"{path}/Intro.mp4")
     final_video.append(intro_video)
 
     # add audio to screenshots
     for idx in range(num_clips):
         image_file, audio_file = f"{path}/{idx}.jpeg", f"{path}/{idx}.mp3"
+        final_video.append(combine_bg_and_audio(image_file, audio_file))
 
-        video = ImageClip(image_file)
-        audio = AudioFileClip(audio_file)
-        video.duration = audio.duration
-        video.audio = audio
-
-        final_video.append(video)
+    # add channel outro
+    outro_bg = f"{path}/{num_clips - 1}.jpeg"
+    outro_audio = "../assets/outro.wav"
+    final_video.append(combine_bg_and_audio(outro_bg, outro_audio))
 
     final_video = concatenate_videoclips(final_video)
-
     try:
         final_video.write_videofile(
             f"{path}/final_video.mp4",
@@ -132,3 +126,10 @@ def create_video(path: str, num_clips: int):
         # os.remove(audio_file)
 
     return f"{path}/final_video.mp4"
+
+def combine_bg_and_audio(image_file, audio_file):
+    video = ImageClip(image_file)
+    audio = AudioFileClip(audio_file)
+    video.duration = audio.duration
+    video.audio = audio
+    return video

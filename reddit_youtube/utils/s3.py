@@ -48,6 +48,19 @@ class S3:
             return False
         return True
 
+
+    def download_story_audio(self, reddit_id, num_clips):
+        print(f"Downloading reddit story: {reddit_id} files from s3")
+
+        if not os.path.exists(reddit_id):
+            os.makedirs(reddit_id)
+
+        for clip in range(num_clips):
+            if not self.download(f"{reddit_id}/{clip}"):
+                return False
+
+        return True
+
     def delete(self, local_file):
         print(f"Deleting {local_file} from s3.")
         try:

@@ -108,3 +108,31 @@ class MongoDB:
             print(e)
             pass
         return None, None
+
+
+
+    def highest_priority_video(self, reddit_id=None):
+        # get story with the lowest series_id and series_part where audio has
+        # been generated
+        # if specific reddit id is provided, generate that one
+        if reddit_id:
+            story = self.get(reddit_id)
+            if not story["audio_generated"] and not story["processing_audio"]:
+                return story["_id"], story["tts_text"]
+            else:
+                print("Story has been processed or is being processed")
+                return None, None
+        try:
+            story_list = self.collection.find(
+                {"audio_generated": True}).sort(
+                [
+                    ("series_id", pymongo.ASCENDING),
+                    ("series_part", pymongo.ASCENDING),
+                ]
+            )
+            return story_list[0]
+        except IndexError as e:
+            print("All stories have tts audio generated")
+            print(e)
+            pass
+        return None

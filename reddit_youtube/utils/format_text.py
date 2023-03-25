@@ -7,13 +7,12 @@ P_TAGS = "</p><p>"
 MAX_HTML_CHARS = 1850
 
 
-# TODO: add this somewhere
-
-# Cannot use '|' character in the text. This is what tts engine uses to
-# split text
 
 # TODO: Remove profanity
 def text_segments(input_text: str) -> tuple[list[str], list[list[str]]]:
+    # Cannot use '|' character in the text. This is what tts engine uses to
+    # split text
+
     text = remove_urls(input_text)
 
     # TODO: clean markdown characters, but still have for html

@@ -22,11 +22,17 @@ class Story:
         self.author = format_text.author_name(sub.author)
         self.author_flair = format_text.author_flair(sub.author_flair_text)
         self.text_ids = format_text.extract_reddit_ids(sub.selftext)
-        self.html_text, self.tts_text = format_text.text_segments(sub.selftext)
         self.title_flair = format_text.title_flair(sub.link_flair_text)
         self.awards = format_text.awards_flair(sub.all_awardings)
         self.series_id = series_id
         self.series_part = None
+
+        self.html_text, self.tts_text = format_text.text_segments(sub.selftext)
+
+        # add title bg and tts text
+        _, title_tts = format_text.text_segments(sub.title)
+        self.tts_text.insert(0, title_tts)
+        self.html_text.insert(0, self.html_text[0])
 
     def __lt__(self, other: "Story"):
         """Evaluate which Story is smaller"""
