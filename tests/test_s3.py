@@ -10,8 +10,7 @@ FAKE_FILE = f"{TEST_DIRECTORY}/fake_file.txt"
 
 
 def create_real_file():
-    if not os.path.exists(TEST_DIRECTORY):
-        os.makedirs(TEST_DIRECTORY)
+    os.makedirs(TEST_DIRECTORY, exist_ok=True)
     with open(REAL_FILE, "w", encoding="utf8") as f:
         f.write("This is a test that will be uploaded")
 

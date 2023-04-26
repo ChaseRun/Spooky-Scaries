@@ -1,4 +1,4 @@
-name: spooky-test
+name: spooky
 channels:
   - pytorch
   - defaults
@@ -18,5 +18,7 @@ dependencies:
       - inflect
       - unidecode
       - pymongo
-      - toml
+      - python-dotenv
       - boto3
+      - replicate
+      - praw

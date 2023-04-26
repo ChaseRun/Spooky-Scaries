@@ -2,3 +2,8 @@ profanity.txt
 .DS_Store
 .idea/
 __pycache__
+Channle_Intro.mp4
+.env
+*.mp3
+*.mp4
+*.png
