@@ -203,6 +203,11 @@ def validate_args(parser):
     )
     args = parser.parse_args()
 
+    args.num_stories = 5
+    args.sort_filter = "top"
+    args.time_filter = "month"
+
+
     # Check for errors
     reddit_id_check = args.reddit_ids != ""
     num_check = args.num_stories != 0
@@ -213,11 +218,11 @@ def validate_args(parser):
     # Exactly one of reddit_id or filters
     if reddit_id_check:
         if num_check or sort_check or time_check or author_check:
-            print(FILTER_CONFLICT_ERROR)
+            print(filter_conflict)
             exit(1)
     else:
         if not (num_check and sort_check and time_check):
-            print(FILTER_CONFLICT_ERROR)
+            print(filter_conflict)
             exit(1)
 
     return args

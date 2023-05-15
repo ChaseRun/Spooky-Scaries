@@ -17,10 +17,12 @@ from dotenv import load_dotenv
 load_dotenv()
 BACKGROUNDS = os.getenv("BACKGROUNDS_DIR")
 CHANNEL_INTRO = os.getenv("CHANNEL_INTRO")
-CWD = os.path.abspath(__file__)
 IMAGE_TEMPLATE = os.getenv("HTML_TEMPLATE")
 IMAGE_WIDTH_RATIO = 0.82
 IMAGE_TRANSPARENCY = 210
+FINAL_WIDTH = 3840
+FINAL_HEIGHT = 2160
+SCREENSHOT_WIDTH_RATIO = 0.82
 
 
 @print_runtime
@@ -38,9 +40,17 @@ def generate_background_images(story: dict[str, str], dir) -> None:
     # create a common "story" template
     with open(IMAGE_TEMPLATE, "r", encoding="utf8") as file:
         story_tmp = file.read()
-        for key, value in sorted(story.items()):
-            if type(value) == str:
-                story_tmp = story_tmp.replace(key.upper(), value)
+
+        story_tmp = story_tmp.replace("TITLE_FLAIR", story["title_flair"])
+        story_tmp = story_tmp.replace("TITLE", story["title"])
+        story_tmp = story_tmp.replace("CREATED_TEXT", story["created_text"])
+        story_tmp = story_tmp.replace("AUTHOR_FLAIR", story["author_flair"])
+        story_tmp = story_tmp.replace("AUTHOR", story["author"])
+        story_tmp = story_tmp.replace("AWARDS", story["awards"])
+
+        # for key, value in sorted(story.items()):
+        #     if type(value) == str:
+        #         story_tmp = story_tmp.replace(key.upper(), value)
 
     # create each background image
     for idx, text in enumerate(story["html_text"]):
@@ -56,17 +66,19 @@ def generate_background_images(story: dict[str, str], dir) -> None:
         # get a browser screenshot using the template
         with sync_playwright() as p:
             browser = p.chromium.launch()
-            image_taker = new_context(device_scale_factor=6).new_page()
-            image_taker.goto(f"file://{CWD}/{tmp_file}")
-            image_taker.query_seector(".screenshot-div")
+            context = browser.new_context(device_scale_factor=6)
+            image_taker = context.new_page()
+            image_taker.goto(f"file://{tmp_file}")
+            image_taker.query_selector(".screenshot-div")
             image_taker.screenshot(path=image_file,
                                    omit_background=True,
                                    animations="disabled")
         # resize the image
         image = Image.open(image_file)
         width, height = int(image.width), int(image.height)
-        ratio = int((final_width * BACKGROUND_WIDTH_RATIO) / width)
-        image = image.resize((width * ratio, height * ration))
+        ratio = (FINAL_WIDTH * SCREENSHOT_WIDTH_RATIO) / width
+        new_width, new_height = int(width * ratio), int(height * ratio)
+        image = image.resize((new_width, new_height))
 
         # adjust opacity
         clean_pixels = []
@@ -74,7 +86,7 @@ def generate_background_images(story: dict[str, str], dir) -> None:
             if pixel[3] != 255:
                 clean_pixels.append((255, 255, 255, 0))
             else:
-                clean_pixels.append((p[0], p[1], p[2], TRANSPARENCY))
+                clean_pixels.append((pixel[0], pixel[1], pixel[2], IMAGE_TRANSPARENCY))
 
         # save
         image.putdata(clean_pixels)
@@ -103,9 +115,10 @@ def generate_video(dir: str):
         content.append(section)
 
     # get the background video
+    # TODO: TEST BACKGROUNDS 1-7
     num_backgrounds = len(glob.glob1(BACKGROUNDS, "*.mp4"))
     bg_file = random.randint(0, num_backgrounds)
-    background = VideoFileClip(f"{BACKGROUNDS}/{bg_file}.mp4")
+    background = VideoFileClip(f"{BACKGROUNDS}/{1}.mp4")
 
     # add background video to each sections
     background = background.without_audio()

@@ -6,7 +6,7 @@ from ..runtime import print_runtime
 
 load_dotenv()
 cwd = os.path.dirname(os.path.abspath(__file__))
-google_credentials = f"{cwd}/../../../google_credentials.json"
+google_credentials = f"{cwd}/../../../google_tts_credentials.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_credentials
 
 

@@ -8,25 +8,24 @@ from utils.video import generate_background_images, generate_video
 SCREENSHOT_WIDTH_RATIO = 0.8
 
 
+# TODO: Switch Google Credentials for TTS
 # TODO: Fix Backgrounds
-# TODO: Schedule Upload Date
-#
+# TODO: Lambda Script Once a Day: Call Import Top 20 of month and generate
+
 
 @print_runtime
 def generate():
+    # add option for custom story
     mongoDB = MongoDB("story")
-    # get relevant story
-
-    # add an update_upload_date for all story's not posted
-    # should be okay to overide if the date is in the past
+    # if no story available, get top 5 from month that aren't in DB
     story = mongoDB.highest_priority_video()
     dir = f"{os.path.dirname(os.path.abspath(__file__))}/{story['_id']}"
     os.makedirs(dir, exist_ok=True)
 
     # print(f"Starting Video Generation for {story['title']}")
-    # generate_audio(story, dir)
-    # generate_background_images(story, dir)
-    # generate_video(dir)
+    generate_audio(story, dir)
+    generate_background_images(story, dir)
+    generate_video(dir)
     upload_to_youtube(story, dir)
 
     # delete directory
