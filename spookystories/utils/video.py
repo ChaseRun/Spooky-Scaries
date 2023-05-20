@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-BACKGROUNDS = os.getenv("BACKGROUNDS_DIR")
+BACKGROUNDS = os.getenv("BACKGROUNDS")
 CHANNEL_INTRO = os.getenv("CHANNEL_INTRO")
 IMAGE_TEMPLATE = os.getenv("HTML_TEMPLATE")
 IMAGE_WIDTH_RATIO = 0.82
@@ -67,9 +67,9 @@ def generate_background_images(story: dict[str, str], dir) -> None:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             context = browser.new_context(device_scale_factor=6)
-            image_taker = context.new_page()
-            image_taker.goto(f"file://{tmp_file}")
-            image_taker.query_selector(".screenshot-div")
+            page = context.new_page()
+            page.goto(f"file://{tmp_file}")
+            image_taker = page.query_selector(".screenshot-div")
             image_taker.screenshot(path=image_file,
                                    omit_background=True,
                                    animations="disabled")
@@ -104,21 +104,20 @@ def generate_video(dir: str):
     # combine each section's image and audio
     content, content_time = [], 0
     num_sections = len(glob.glob1(dir, "*.mp3"))
-    for idx in range(1, num_sections):
+    for idx in range(0, 3):
         audio = AudioFileClip(f"{dir}/{idx}.mp3")
         section = (ImageClip(f"{dir}/{idx}.png")
                    .set_audio(audio)
                    .set_duration(audio.duration)
-                   .set_start(start_time)
-                   .set_pos(("center", "center")))
+                   .set_start(content_time)
+                   .set_position(("center", "center")))
         content_time += audio.duration
         content.append(section)
 
     # get the background video
-    # TODO: TEST BACKGROUNDS 1-7
     num_backgrounds = len(glob.glob1(BACKGROUNDS, "*.mp4"))
     bg_file = random.randint(0, num_backgrounds)
-    background = VideoFileClip(f"{BACKGROUNDS}/{1}.mp4")
+    background = VideoFileClip(f"{BACKGROUNDS}/{bg_file}.mp4")
 
     # add background video to each sections
     background = background.without_audio()
@@ -203,14 +202,14 @@ def write_video(video_content, file_name):
 #     final_video = concatenate_videoclips(final_video)
 #     try:
 #         write_video(final_video, dir)
-#         print(f"Saved .mp4 without Exception at {path}/final.mp4")
+#         print(f"Saved .mp4 without Exception at {path}/final_b4_image_fix.mp4")
 #     except IndexError:
 #         # Short by one frame, so get rid on the last frame:
 #         final_video = final_video.subclip(
 #             t_end=(final_video.duration - 1.0 / 60)
 #         )
 #         write_video(final_video, dir)
-#         print(f"Saved .mp4 after Exception at {path}/final.mp4")
+#         print(f"Saved .mp4 after Exception at {path}/final_b4_image_fix.mp4")
 #     except Exception as e:
 #         print(f"Exception {e} was raised!!")
 #

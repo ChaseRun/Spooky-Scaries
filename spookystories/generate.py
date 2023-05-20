@@ -9,6 +9,7 @@ SCREENSHOT_WIDTH_RATIO = 0.8
 
 
 # TODO: Switch Google Credentials for TTS
+# TODO: Save Previous background within series?
 # TODO: Fix Backgrounds
 # TODO: Lambda Script Once a Day: Call Import Top 20 of month and generate
 
@@ -22,11 +23,11 @@ def generate():
     dir = f"{os.path.dirname(os.path.abspath(__file__))}/{story['_id']}"
     os.makedirs(dir, exist_ok=True)
 
-    # print(f"Starting Video Generation for {story['title']}")
+    print(f"Starting Video Generation for {story['title']}")
     generate_audio(story, dir)
     generate_background_images(story, dir)
     generate_video(dir)
-    upload_to_youtube(story, dir)
+    #upload_to_youtube(story, dir)
 
     # delete directory
 
